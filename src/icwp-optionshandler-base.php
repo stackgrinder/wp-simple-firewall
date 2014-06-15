@@ -299,7 +299,7 @@ class ICWP_OptionsHandler_Base_V2 {
 			}
 			foreach ( $aOptionsSection['section_options'] as $aOption ) {
 				list($sKey, $fill1, $fill2, $sType) =  $aOption;
-				$aToJoin[] = $sType.':'.$sKey;
+				$aToJoin[] = (is_array($sType) ? array_shift($sType): $sType).':'.$sKey;
 			}
 		}
 		return implode( self::CollateSeparator, $aToJoin );
