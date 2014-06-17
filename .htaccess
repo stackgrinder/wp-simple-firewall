@@ -1,4 +1,4 @@
-Order Allow,Deny
+Require all denied
 <FilesMatch "^.*\.(css|js|png)$">
-	Allow from all
+	Require all granted
 </FilesMatch>
