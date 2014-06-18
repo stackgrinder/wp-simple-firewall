@@ -23,8 +23,8 @@ class ICWP_OptionsHandler_LoginProtect extends ICWP_OptionsHandler_Base_Wpsf {
 	
 	const StoreName = 'loginprotect_options';
 	
-	public function __construct( $insPrefix, $insVersion ) {
-		parent::__construct( $insPrefix, self::StoreName, $insVersion );
+	public function __construct( $oPluginVo ) {
+		parent::__construct( $oPluginVo, self::StoreName );
 
 		$this->sFeatureName = _wpsf__('Login Protect');
 		$this->sFeatureSlug = 'login_protect';
@@ -248,23 +248,6 @@ class ICWP_OptionsHandler_LoginProtect extends ICWP_OptionsHandler_Base_Wpsf {
 			$aYubikeyProtect,
 			$aLoggingSection
 		);
-	}
-
-	public function updateHandler() {
-
-		$sCurrentVersion = empty( $this->m_aOptionsValues[ 'current_plugin_version' ] )? '0.0' : $this->m_aOptionsValues[ 'current_plugin_version' ];
-		if ( version_compare( $sCurrentVersion, '1.4.0', '<' ) ) {
-			$aSettingsKey = array(
-				'current_plugin_version',
-				'enable_login_protect',
-				'enable_two_factor_auth_by_ip',
-				'enable_two_factor_bypass_on_email_fail',
-				'login_limit_interval',
-				'enable_login_gasp_check',
-				'enable_login_protect_log',
-			);
-			$this->migrateOptions( $aSettingsKey );
-		}//'1.4.0', '<'
 	}
 
 	/**

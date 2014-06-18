@@ -23,8 +23,8 @@ class ICWP_OptionsHandler_Firewall extends ICWP_OptionsHandler_Base_Wpsf {
 	
 	const StoreName = 'firewall_options';
 	
-	public function __construct( $insPrefix, $insVersion ) {
-		parent::__construct( $insPrefix, self::StoreName, $insVersion );
+	public function __construct( $oPluginVo ) {
+		parent::__construct( $oPluginVo, self::StoreName );
 
 		$this->sFeatureName = _wpsf__('Firewall');
 		$this->sFeatureSlug = 'firewall';
@@ -269,13 +269,6 @@ class ICWP_OptionsHandler_Firewall extends ICWP_OptionsHandler_Base_Wpsf {
 			$aBlockTypesSection,
 			$aMisc
 		);
-	}
-
-	public function updateHandler() {
-
-		$sCurrentVersion = empty( $this->m_aOptionsValues[ 'current_plugin_version' ] )? '0.0' : $this->m_aOptionsValues[ 'current_plugin_version' ];
-		if ( version_compare( $sCurrentVersion, '1.4.0', '<' ) ) {
-		}//v1.4.0
 	}
 
 	public function addRawIpsToFirewallList( $insListName, $inaNewIps ) {

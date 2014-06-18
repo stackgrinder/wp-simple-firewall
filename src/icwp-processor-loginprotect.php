@@ -17,9 +17,9 @@
 
 require_once( dirname(__FILE__).'/icwp-basedb-processor.php' );
 
-if ( !class_exists('ICWP_LoginProtectProcessor_V2') ):
+if ( !class_exists('ICWP_LoginProtectProcessor_V3') ):
 
-class ICWP_LoginProtectProcessor_V2 extends ICWP_BaseDbProcessor_WPSF {
+class ICWP_LoginProtectProcessor_V3 extends ICWP_BaseDbProcessor_WPSF {
 	
 	const Slug = 'login_protect';
 	const TableName = 'login_auth';
@@ -62,8 +62,8 @@ class ICWP_LoginProtectProcessor_V2 extends ICWP_BaseDbProcessor_WPSF {
 	 */
 	protected $m_fAllowTwoFactorByPass;
 
-	public function __construct( $insOptionPrefix = '' ) {
-		parent::__construct( $this->constructStorageKey( $insOptionPrefix, self::Slug ), self::TableName );
+	public function __construct( $oPluginVo ) {
+		parent::__construct( $oPluginVo, self::Slug, self::TableName );
 		$this->m_sGaspKey = uniqid();
 		$this->updateLastLoginThrottleTime( time() );
 		$this->createTable();
@@ -145,9 +145,12 @@ class ICWP_LoginProtectProcessor_V2 extends ICWP_BaseDbProcessor_WPSF {
 				break;
 		}
 	}
-	
-	public function setLogging( $infEnableLogging = true ) {
-		parent::setLogging( $this->getOption('enable_login_protect_log') == 'Y' );
+
+	/**
+	 * @param bool $fEnableLogging
+	 */
+	public function setLogging( $fEnableLogging = true ) {
+		parent::setLogging( $this->getIsOption( 'enable_login_protect_log', 'Y' ) );
 	}
 
 	/**
@@ -172,9 +175,10 @@ class ICWP_LoginProtectProcessor_V2 extends ICWP_BaseDbProcessor_WPSF {
 
 		// Add GASP checking to the login form.
 		if ( $this->getIsOption('enable_login_gasp_check', 'Y') ) {
-			add_action( 'login_form',			array( $this, 'printGaspLoginCheck_Action' ) );
-			add_filter( 'login_form_middle',	array( $this, 'printGaspLoginCheck_Filter' ) );
-			add_filter( 'authenticate',			array( $this, 'checkLoginForGasp_Filter' ), 22, 3);
+			add_action( 'login_form',				array( $this, 'printGaspLoginCheck_Action' ) );
+			add_action( 'woocommerce_login_form',	array( $this, 'printGaspLoginCheck_Action' ) );
+			add_filter( 'login_form_middle',		array( $this, 'printGaspLoginCheck_Filter' ) );
+			add_filter( 'authenticate',				array( $this, 'checkLoginForGasp_Filter' ), 22, 3);
 		}
 
 		// Do GASP checking if it's a form submit.
@@ -1079,5 +1083,5 @@ class ICWP_LoginProtectProcessor_V2 extends ICWP_BaseDbProcessor_WPSF {
 endif;
 
 if ( !class_exists('ICWP_WPSF_LoginProtectProcessor') ):
-	class ICWP_WPSF_LoginProtectProcessor extends ICWP_LoginProtectProcessor_V2 { }
+	class ICWP_WPSF_LoginProtectProcessor extends ICWP_LoginProtectProcessor_V3 { }
 endif;

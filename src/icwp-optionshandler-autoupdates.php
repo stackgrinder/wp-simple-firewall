@@ -23,8 +23,8 @@ class ICWP_OptionsHandler_AutoUpdates_V2 extends ICWP_OptionsHandler_Base_Wpsf {
 	
 	const StoreName = 'autoupdates_options';
 	
-	public function __construct( $insPrefix, $insVersion ) {
-		parent::__construct( $insPrefix, self::StoreName, $insVersion );
+	public function __construct( $oPluginVo ) {
+		parent::__construct( $oPluginVo, self::StoreName );
 
 		$this->sFeatureName = _wpsf__('Automatic Updates');
 		$this->sFeatureSlug = 'autoupdates';
@@ -167,13 +167,6 @@ class ICWP_OptionsHandler_AutoUpdates_V2 extends ICWP_OptionsHandler_Base_Wpsf {
 			$aAutoUpdateComponents,
 			$aAutoUpdateEmail
 		);
-	}
-
-	public function updateHandler() {
-
-		$sCurrentVersion = $this->getVersion();
-		$sCurrentVersion = empty( $sCurrentVersion )? '0.0' : $sCurrentVersion;
-		if ( version_compare( $sCurrentVersion, '1.9.0', '<' ) ) { }//v1.9.0
 	}
 }
 

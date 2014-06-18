@@ -70,8 +70,8 @@ class ICWP_FirewallProcessor_V1 extends ICWP_WPSF_BaseProcessor {
 	 */
 	protected $m_aPageParamValues;
 
-	public function __construct( $insOptionPrefix = '' ) {
-		parent::__construct( $this->constructStorageKey( $insOptionPrefix, self::Slug ) );
+	public function __construct( $oPluginVo ) {
+		parent::__construct( $oPluginVo, self::Slug );
 		
 		$sMessage = "You were blocked by the %sWordPress Simple Firewall%s.";
 		$this->m_sFirewallMessage = sprintf( $sMessage, '<a href="http://wordpress.org/plugins/wp-simple-firewall/" target="_blank">', '</a>');
@@ -100,7 +100,7 @@ class ICWP_FirewallProcessor_V1 extends ICWP_WPSF_BaseProcessor {
 		}
 
 		$this->m_aCustomWhitelistPageParams = is_array( $this->m_aOptions[ 'page_params_whitelist' ] )? $this->m_aOptions[ 'page_params_whitelist' ] : array();
-		$this->setLogging( $this->getOption('enable_firewall_log') == 'Y' );
+		$this->setLogging();
 	}
 
 	/**
@@ -118,6 +118,13 @@ class ICWP_FirewallProcessor_V1 extends ICWP_WPSF_BaseProcessor {
 		$this->m_nRequestTimestamp = time();
 		$this->m_nLoopProtect = 0;
 		$this->m_fRequestIsWhitelisted = false;
+	}
+
+	/**
+	 * @param bool $fEnableLogging
+	 */
+	public function setLogging( $fEnableLogging = true ) {
+		parent::setLogging( $this->getIsOption( 'enable_firewall_log', 'Y' ) );
 	}
 	
 	/**

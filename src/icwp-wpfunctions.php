@@ -17,17 +17,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-if ( !class_exists('ICWP_WpFunctions_V3') ):
+if ( !class_exists('ICWP_WpFunctions_V4') ):
 
-class ICWP_WpFunctions_V3 {
+class ICWP_WpFunctions_V4 {
 
 	/**
-	 * @var ICWP_WpFunctions_V3
+	 * @var ICWP_WpFunctions_V4
 	 */
 	protected static $oInstance = NULL;
 
 	/**
-	 * @return ICWP_WpFunctions_V3
+	 * @return ICWP_WpFunctions_V4
 	 */
 	public static function GetInstance() {
 		if ( is_null( self::$oInstance ) ) {
@@ -40,6 +40,11 @@ class ICWP_WpFunctions_V3 {
 	 * @var string
 	 */
 	protected $m_sWpVersion;
+
+	/**
+	 * @var boolean
+	 */
+	protected $fIsMultisite;
 	
 	public function __construct() {}
 
@@ -151,12 +156,59 @@ class ICWP_WpFunctions_V3 {
 		wp_safe_redirect( $sUrl );
 		exit();
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function isMultisite() {
+		if ( !isset( $this->fIsMultisite ) ) {
+			$this->fIsMultisite = function_exists( 'is_multisite' ) && is_multisite();
+		}
+		return $this->fIsMultisite;
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param $sValue
+	 * @return mixed
+	 */
+	public function addOption( $sKey, $sValue ) {
+		return $this->isMultisite() ? add_site_option( $sKey, $sValue ) : add_option( $sKey, $sValue );
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param $sValue
+	 * @return mixed
+	 */
+	public function updateOption( $sKey, $sValue ) {
+		return $this->isMultisite() ? update_site_option( $sKey, $sValue ) : update_option( $sKey, $sValue );
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param mixed $mDefault
+	 * @return mixed
+	 */
+	public function getOption( $sKey, $mDefault = false ) {
+		return $this->isMultisite() ? get_site_option( $sKey, $mDefault ) : get_option( $sKey, $mDefault );
+	}
+
+	/**
+	 * @param string $sKey
+	 * @return mixed
+	 */
+	public function deleteOption( $sKey ) {
+		return $this->isMultisite() ? delete_site_option( $sKey ) : delete_option( $sKey );
+	}
+
+
 }
 endif;
 
 if ( !class_exists('ICWP_WpFunctions_WPSF') ):
 
-	class ICWP_WpFunctions_WPSF extends ICWP_WpFunctions_V3 {
+	class ICWP_WpFunctions_WPSF extends ICWP_WpFunctions_V4 {
 		/**
 		 * @return ICWP_WpFunctions_WPSF
 		 */
