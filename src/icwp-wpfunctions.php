@@ -75,7 +75,14 @@ class ICWP_WpFunctions_V4 {
 	
 	public function getWordpressUpdates() {
 		$oCurrent = $this->getTransient( 'update_plugins' );
-		return $oCurrent->response;
+		if(isset($oCurrent->response))
+		{
+			return $oCurrent->response;
+		}
+		else
+		{
+			return;
+		}
 	}
 	
 	/**
